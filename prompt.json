@@ -1,0 +1,173 @@
+{
+  "english": {
+    "general": {
+      "system_prompt": "You are a meticulous, friendly, and patient assistant. Your primary goal is to help users accurately fill out an agricultural work activity form step-by-step. You must adhere to the following instructions strictly: 1. **Initial Activity Choice:** Begin by asking the user to specify the type of activity. Valid options are: 'Defense/Fertilization', 'Seeding/Transplanting', 'Irrigation', 'Harvesting', or 'Combined'. 2. **Guided Field Collection:** Once chosen, guide the user field-by-field for all MANDATORY fields. 3. **Date/Time Logic:** User MUST provide EITHER a 'Single Date' OR a 'Period + Time'. 4. **Summarization and Confirmation:** Before submitting, create a clear, bulleted summary and ask for explicit confirmation (e.g., 'Do you want to submit?'). 5. **Handling Cancellation:** If the user says 'cancel form', confirm their intent and reset. **Important:** Always submit the completed form using the appropriate tool call. Do not just send a summary as a message.",
+      "hello_message": "Hello! To help you fill out a work activity form, please tell me the type of activity. Options are: {activity_options}.",
+      "form_cancelled_message": "Okay, I've cancelled the current {activity_type} form. What would you like to do next? (e.g., 'start a new form', or type 'exit' to end our chat)",
+      "form_timeout_message": "It seems we're taking a lot of turns to fill out the {activity_type} form. I've reset this form to avoid issues. Would you like to try starting this form again, choose a different activity, or 'exit'?",
+      "initial_choice_timeout_message": "It seems we're having trouble selecting an activity type after {max_attempts} attempts. Let's start over. Please tell me the type of activity you'd like to log (e.g., 'Irrigation', 'Harvesting'), or type 'exit'.",
+      "final_confirmation_message": "Great! The {activity_type} has been recorded. What's next?",
+      "error_message": "I encountered an issue. Could you please try rephrasing?"
+    },
+    "tools": {
+      "common": {
+        "fields_involved": "Mandatory. The field(s) where the activity takes place. Must be one of the provided enum values if available, otherwise specify.",
+        "single_date": "A single date for the activity (e.g., '2024-07-15'). Provide this OR Period + Time.",
+        "period_time": "A period and time for the activity (e.g., 'Early May, morning', 'Next week, 09:00-11:00'). Provide this OR Single Date.",
+        "status": "Mandatory. The current status of the activity.",
+        "tractor": "Tractor used, if any.",
+        "percentage_usage_or_completion": "Percentage, if applicable (e.g., tractor usage %, area completed %).",
+        "tool_used": "Tool used, if any.",
+        "work_hours_minutes": "Work hours and minutes spent (e.g., '2h 30m').",
+        "user": "Mandatory. User(s) involved or responsible for the activity. Must be one of the provided enum values if available, otherwise specify.",
+        "notes": "Any additional notes about the activity.",
+        "attachments": "Names or links to any attachments (e.g., 'photo1.jpg', 'document_link')."
+      },
+      "Defense/Fertilization": {
+        "description": "Fill out a Defense or Fertilization activity form. Ensure 'Single Date' OR 'Period + Time' is collected. Collect all other mandatory fields.",
+        "fields": {
+          "product_used": "Mandatory. Product used (e.g., 'Pesticide X', 'Fertilizer Y'). Must be one of the enum values.",
+          "dose_product": "Mandatory. Dose of the product used (e.g., '10ml/L', '5kg/Ha').",
+          "Defense_unit": "Mandatory. Unit for the product or defense measure (e.g., 'Liters', 'Kg', 'units/Ha'). Table field: [Defense] Unit.",
+          "product_dose_total_used": "Mandatory. Total quantity of product mixture or defense measure applied (e.g., '5 Liters total', '200 Kg'). Table field: [Defense] Dose used.",
+          "warehouse_source": "Warehouse from which product was taken."
+        }
+      },
+      "Seeding/Transplanting": {
+        "description": "Fill out a Seeding or Transplanting activity form. Ensure 'Single Date' OR 'Period + Time' is collected. Collect all other mandatory fields.",
+        "fields": {
+          "product_used": "Mandatory. Seed or transplant product used. Must be one of the enum values.",
+          "dose_seeds_plants": "Mandatory. Dose or quantity of seeds/plants (e.g., '20kg/Ha', '500 plants').",
+          "product_unit": "Mandatory. Unit for the seeds/plants (e.g., 'Kg', 'plants/m2').",
+          "product_dose_total_used": "Mandatory. Total quantity of seeds/plants used.",
+          "warehouse_source": "Warehouse from which seeds/plants were taken."
+        }
+      },
+      "Irrigation": {
+        "description": "Fill out an Irrigation activity form. Ensure 'Single Date' OR 'Period + Time' is collected. Collect all other mandatory fields.",
+        "fields": {
+            "activity_type_detail": "Mandatory. Specific type of irrigation (e.g., 'Scheduled Drip Irrigation', 'Emergency Sprinkler Run').",
+            "dose_unit_water": "Mandatory. Unit for water amount (e.g., 'mm', 'Liters/Ha', 'm3').",
+            "duration_irrigation": "Mandatory. Duration of the irrigation event (e.g., '3 hours', '45 minutes').",
+            "capacity_irrigation": "Mandatory. Capacity related to irrigation (e.g., 'Pump capacity 50m3/hr', 'Tank capacity 1000L', 'Flow rate')."
+        }
+      },
+      "Harvesting": {
+        "description": "Fill out a Harvesting activity form. Ensure 'Single Date' OR 'Period + Time' is collected. Collect all other mandatory fields.",
+        "fields": {
+            "harvesting_commodity": "Mandatory. The commodity being harvested (e.g., 'Wheat', 'Apples', 'Corn silage').",
+            "product_as_is_info": "Mandatory. Information about the product as harvested (e.g., 'Grain', 'Fresh Fruit', 'Bales').",
+            "umidity_content": "Mandatory from table. Umidity/Moisture content if measured (e.g., '14.5%').",
+            "destination_harvest": "Mandatory. Destination of the harvested product (e.g., 'Silo 3', 'Local Market', 'Cooperative')."
+        }
+      },
+      "Combined": {
+        "description": "Fill out a Combined activity form. Ensure 'Single Date' OR 'Period + Time' is collected. Collect common mandatory fields. Ask clarifying questions for specific operations.",
+        "fields": {
+            "activity_type_detail": "Mandatory. Describe the combined activity (e.g., 'Fertilizing while Seeding', 'Scouting and Spot Spraying').",
+            "product_1_details": "Details of a first product used, if any (name, dose, unit).",
+            "product_2_details": "Details of a second product used, if any (name, dose, unit).",
+            "specific_observation_1": "Specific observation or measurement related to the combined activity."
+        }
+      }
+    }
+  },
+  "italian": {
+    "general": {
+      "system_prompt": "Sei un assistente meticoloso, cordiale e paziente. Il tuo obiettivo principale è aiutare gli utenti a compilare in modo accurato un modulo di attività lavorativa agricola, passo dopo passo. Devi attenerti rigorosamente alle seguenti istruzioni: 1. **Scelta Iniziale dell'Attività:** Inizia chiedendo all'utente di specificare il tipo di attività. Le opzioni valide sono: 'Difesa/Fertilizzazione', 'Semina/Trapianto', 'Irrigazione', 'Raccolta', o 'Combinata'. 2. **Raccolta Guidata dei Campi:** Una volta scelta l'attività, guida l'utente campo per campo per tutti i campi OBBLIGATORI. 3. **Logica Data/Ora:** L'utente DEVE fornire O una 'Data Singola' O un 'Periodo + Ora'. 4. **Riepilogo e Conferma:** Prima di inviare, crea un riepilogo chiaro e puntato e chiedi una conferma esplicita (es. 'Vuoi inviare il modulo?'). 5. **Gestione Annullamento:** Se l'utente dice 'annulla modulo', conferma la sua intenzione e ricomincia. cerca di adeguarti a la risposta piu vicina delle opzioni  **Important:** Always submit the completed form using the appropriate tool call. Do not just send a summary as a message.",
+      "hello_message": "Ciao! Per aiutarti a compilare un modulo di attività lavorativa, per favore dimmi il tipo di attività. Le opzioni sono: {activity_options}.",
+      "form_cancelled_message": "Ok, ho annullato il modulo di attività '{activity_type}' corrente. Cosa vorresti fare ora? (es. 'inizia un nuovo modulo', o scrivi 'esci' per terminare)",
+      "form_timeout_message": "Sembra che ci stiamo mettendo troppo tempo per compilare il modulo '{activity_type}'. Ho resettato il modulo per evitare problemi. Vuoi provare a ricominciare questo modulo, scegliere un'attività diversa, o 'uscire'?",
+      "initial_choice_timeout_message": "Sembra che ci siano problemi a selezionare un tipo di attività dopo {max_attempts} tentativi. Ricominciamo da capo. Per favore, dimmi il tipo di attività che vorresti registrare (es. 'Irrigazione', 'Raccolta'), o scrivi 'esci'.",
+      "final_confirmation_message": "Ottimo! L'attività di tipo '{activity_type}' è stata registrata. Qual è il prossimo passo?",
+      "error_message": "Ho riscontrato un problema. Potresti provare a riformulare la tua richiesta?"
+    },
+    "tools": {
+      "common": {
+        "fields_involved": "Obbligatorio. Il/i campo/i in cui si svolge l'attività. Deve essere uno dei valori forniti dall'elenco, se disponibile, altrimenti specificare.",
+        "single_date": "Una data singola per l'attività (es. '15-07-2025'). Fornisci questa OPPURE Periodo + Ora.",
+        "period_time": "Un periodo e un orario per l'attività (es. 'Inizio Maggio, mattina', 'Prossima settimana, 09:00-11:00'). Fornisci questo OPPURE Data Singola.",
+        "status": "Obbligatorio. Lo stato attuale dell'attività.",
+        "tractor": "Trattore utilizzato, se presente.",
+        "percentage_usage_or_completion": "Percentuale, se applicabile (es. % di utilizzo del trattore, % di area completata).",
+        "tool_used": "Attrezzo utilizzato, se presente.",
+        "work_hours_minutes": "Ore e minuti di lavoro impiegati (es. '2h 30m').",
+        "user": "Obbligatorio. Utente/i o operatore/i coinvolto/i o responsabile/i dell'attività. Deve essere uno dei valori forniti, se disponibile.",
+        "notes": "Eventuali note aggiuntive sull'attività.",
+        "attachments": "Nomi o link di eventuali allegati (es. 'foto1.jpg', 'link_documento')."
+      },
+      "Defense/Fertilization": {
+        "description": "Compila un modulo di attività di Difesa o Fertilizzazione. Assicurati di raccogliere una 'Data Singola' O un 'Periodo + Ora'. Raccogli tutti gli altri campi obbligatori.",
+        "fields": {
+          "product_used": "Obbligatorio. Prodotto utilizzato (es. 'Pesticida X', 'Fertilizzante Y'). Deve essere uno dei valori dell'elenco.",
+          "dose_product": "Obbligatorio. Dose del prodotto utilizzata (es. '10ml/L', '5kg/Ha').",
+          "Defense_unit": "Obbligatorio. Unità di misura per il prodotto o trattamento (es. 'Litri', 'Kg', 'unità/Ha').",
+          "product_dose_total_used": "Obbligatorio. Quantità totale di miscela o trattamento applicato (es. '5 Litri totali', '200 Kg').",
+          "warehouse_source": "Magazzino da cui è stato prelevato il prodotto."
+        }
+      },
+      "Seeding/Transplanting": {
+        "description": "Compila un modulo di attività di Semina o Trapianto. Assicurati di raccogliere una 'Data Singola' O un 'Periodo + Ora'. Raccogli tutti gli altri campi obbligatori.",
+        "fields": {
+          "product_used": "Obbligatorio. Semente o piantina utilizzata. Deve essere uno dei valori dell'elenco.",
+          "dose_seeds_plants": "Obbligatorio. Dose o quantità di semi/piantine (es. '20kg/Ha', '500 piante').",
+          "product_unit": "Obbligatorio. Unità di misura per i semi/le piantine (es. 'Kg', 'piante/m2').",
+          "product_dose_total_used": "Obbligatorio. Quantità totale di semi/piantine utilizzata.",
+          "warehouse_source": "Magazzino da cui sono stati prelevati i semi/le piantine."
+        }
+      },
+      "Irrigation": {
+        "description": "Compila un modulo di attività di Irrigazione. Assicurati di raccogliere una 'Data Singola' O un 'Periodo + Ora'. Raccogli tutti gli altri campi obbligatori.",
+        "fields": {
+            "activity_type_detail": "Obbligatorio. Tipo specifico di irrigazione (es. 'Irrigazione a goccia programmata', 'Irrigazione di emergenza a pioggia').",
+            "dose_unit_water": "Obbligatorio. Unità di misura per la quantità d'acqua (es. 'mm', 'Litri/Ha', 'm3').",
+            "duration_irrigation": "Obbligatorio. Durata dell'evento di irrigazione (es. '3 ore', '45 minuti').",
+            "capacity_irrigation": "Obbligatorio. Portata o capacità relativa all'irrigazione (es. 'Portata pompa 50m3/ora', 'Capacità cisterna 1000L')."
+        }
+      },
+      "Harvesting": {
+        "description": "Compila un modulo di attività di Raccolta. Assicurati di raccogliere una 'Data Singola' O un 'Periodo + Ora'. Raccogli tutti gli altri campi obbligatori.",
+        "fields": {
+            "harvesting_commodity": "Obbligatorio. Il prodotto che viene raccolto (es. 'Grano', 'Mele', 'Insilato di mais').",
+            "product_as_is_info": "Obbligatorio. Informazioni sul prodotto così com'è stato raccolto (es. 'Granella', 'Frutta fresca', 'Balle di fieno').",
+            "umidity_content": "Obbligatorio. Contenuto di umidità, se misurato (es. '14.5%').",
+            "destination_harvest": "Obbligatorio. Destinazione del prodotto raccolto (es. 'Silo 3', 'Mercato locale', 'Cooperativa')."
+        }
+      },
+      "Combined": {
+        "description": "Compila un modulo di attività Combinata. Assicurati di raccogliere una 'Data Singola' O un 'Periodo + Ora'. Raccogli i campi obbligatori comuni e fai domande specifiche per le operazioni combinate.",
+        "fields": {
+            "activity_type_detail": "Obbligatorio. Descrivi l'attività combinata (es. 'Fertilizzazione durante la semina', 'Monitoraggio e trattamento localizzato').",
+            "product_1_details": "Dettagli di un primo prodotto utilizzato, se presente (nome, dose, unità).",
+            "product_2_details": "Dettagli di un secondo prodotto utilizzato, se presente (nome, dose, unità).",
+            "specific_observation_1": "Osservazione o misurazione specifica relativa all'attività combinata."
+        }
+      }
+    }
+  }
+  ,
+  "spanish": {
+    "general": {
+      "system_prompt": "Eres un asistente meticuloso, amigable y paciente. Tu objetivo principal es ayudar a los usuarios a completar con precisión un formulario de actividad agrícola paso a paso...",
+      "hello_message": "¡Hola! Para ayudarte a completar un formulario de actividad, por favor dime el tipo de actividad. Las opciones son: {activity_options}.",
+      "form_cancelled_message": "De acuerdo, he cancelado el formulario de {activity_type} actual. ¿Qué te gustaría hacer ahora?",
+      "final_confirmation_message": "¡Genial! La actividad {activity_type} ha sido registrada. ¿Qué sigue?",
+      "error_message": "Encontré un problema. ¿Podrías intentar reformular tu pregunta?"
+    },
+    "tools": {
+        "common": {
+            "fields_involved": "Obligatorio. El/los campo(s) donde se realiza la actividad. Debe ser uno de los valores proporcionados.",
+            "status": "Obligatorio. El estado actual de la actividad.",
+            "user": "Obligatorio. Usuario(s) responsable(s) de la actividad.",
+            "notes": "Cualquier nota adicional sobre la actividad."
+        },
+        "Defense/Fertilization": {
+            "description": "Rellenar un formulario de actividad de Defensa o Fertilización.",
+            "fields": {
+                "product_used": "Obligatorio. Producto utilizado (ej. 'Pesticida X').",
+                "dose_product": "Obligatorio. Dosis del producto utilizado (ej. '10ml/L')."
+            }
+        }
+    }
+  }
+}
